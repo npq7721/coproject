@@ -1,0 +1,26 @@
+# /etc/conf.d/coralliumd: config file for /etc/init.d/coralliumd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/corallium/corallium.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/coralliumd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/coralliumd.pid"
+
+# Where to write coralliumd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/coralliumd"
+
+# User and group to own coralliumd process
+#BITCOIND_USER="corallium"
+#BITCOIND_GROUP="corallium"
+
+# Path to coralliumd executable
+#BITCOIND_BIN="/usr/bin/coralliumd"
+
+# Nice value to run coralliumd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""

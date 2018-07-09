@@ -1,0 +1,26 @@
+[Unit]
+Description=CRLM's distributed currency daemon
+After=network.target
+
+[Service]
+User=corallium
+Group=corallium
+
+Type=forking
+PIDFile=/var/lib/coralliumd/coralliumd.pid
+
+ExecStart=/usr/bin/coralliumd -daemon -pid=/var/lib/coralliumd/coralliumd.pid \
+          -conf=/etc/corallium/corallium.conf -datadir=/var/lib/coralliumd
+
+ExecStop=-/usr/bin/corallium-cli -conf=/etc/corallium/corallium.conf \
+         -datadir=/var/lib/coralliumd stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
