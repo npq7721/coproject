@@ -523,7 +523,8 @@ Value startmasternode (const Array& params, bool fHelp)
                 continue;
             CTxIn vin = CTxIn(uint256(mne.getTxHash()), uint32_t(nIndex));
             CMasternode* pmn = mnodeman.Find(vin);
-
+            LogPrintf("masternode txid %s, masternode index %d", mne.getTxHash().c_str(), nIndex);
+            LogPrintf("masternode vin %s", vin.prevout.GetHash().ToString().c_str());
             if (pmn != NULL) {
                 if (strCommand == "missing") continue;
                 if (strCommand == "disabled" && pmn->IsEnabled()) continue;
