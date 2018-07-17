@@ -1611,10 +1611,10 @@ double ConvertBitsToDouble(unsigned int nBits)
 }
 
 float getRegularBlockValue(int nHeight) {
-	if(nHeight <= 65700) {
+	if(nHeight <= 6570) {
 		return 6.5;
 	}
-	if(nHeight <= 131400) {
+	if(nHeight <= 13140) {
 		return 5.8;
 	}
 	if(nHeight <= 197100) {
@@ -1670,10 +1670,10 @@ float getSuperBlockValue(int nHeight) {
 	if(endDigit != 6 && endDigit != 9) {
 		return -1;
 	}
-	if(nHeight <= 65700) {
+	if(nHeight <= 6570) {
 		return 12;
 	}
-	if(nHeight <= 131400) {
+	if(nHeight <= 13140) {
 		return 10.8;
 	}
 	if(nHeight <= 197100) {
@@ -1729,10 +1729,10 @@ float getUtraBlockValue(int nHeight) {
 	if(endDigit != 2) {
 		return -1;
 	}
-	if(nHeight <= 65700) {
+	if(nHeight <= 6570) {
 		return 22;
 	}
-	if(nHeight <= 131400) {
+	if(nHeight <= 13140) {
 		return 19.8;
 	}
 	if(nHeight <= 197100) {
@@ -1788,10 +1788,10 @@ float getLuckyBlockValue(int nHeight) {
 	if(endDigit != 777) {
 		return -1;
 	}
-	if(nHeight <= 262800) {
+	if(nHeight <= 16280) {
 		return 77;
 	}
-	if(nHeight <= 525600) {
+	if(nHeight <= 32560) {
 		return 69.30;
 	}
 	if(nHeight <= 788400) {
@@ -1842,7 +1842,7 @@ int64_t GetBlockValue(int nHeight)
     }
     if (nHeight == 1) {
         nSubsidy = 411569 * COIN; // premine
-    } else if(nHeight <= 10080) {
+    } else if(nHeight <= 4000) {
     	nSubsidy = 1 * COIN/10;
     } else if(nHeight <= 3942000) {
     	float value = getLuckyBlockValue(nHeight);
@@ -1867,7 +1867,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
     int64_t ret = 0;
 
     if (nHeight > Params().StartMasternodePayments()) {
-    	if(nHeight <= 31680) {
+    	if(nHeight <= 5168) {
     		ret = blockValue * 0.1;
     	} else {
     		ret = blockValue * .80;
