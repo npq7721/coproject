@@ -1845,8 +1845,8 @@ int64_t GetBlockValue(int nHeight)
     } else if(nHeight <= 4000) {
     	nSubsidy = 1 * COIN/10;
     } else if(nHeight <= 3942000) {
-    	if(nHeight >= 4500) {
-    		nHeight--;
+    	if(nHeight >= 4499) {
+    		nHeight++;
     	}
     	float value = getLuckyBlockValue(nHeight);
     	if(value == -1) {
