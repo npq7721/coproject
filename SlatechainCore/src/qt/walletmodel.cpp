@@ -32,6 +32,7 @@ WalletModel::WalletModel(CWallet* wallet, OptionsModel* optionsModel, QObject* p
                                                                                          transactionTableModel(0),
                                                                                          recentRequestsTableModel(0),
                                                                                          cachedBalance(0), cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
+																						 cachedStakingBalance(0),
                                                                                          cachedEncryptionStatus(Unencrypted),
                                                                                          cachedNumBlocks(0)
 {
@@ -87,6 +88,11 @@ CAmount WalletModel::getImmatureBalance() const
     return wallet->GetImmatureBalance();
 }
 
+CAmount WalletModel::getStakingBalance() const
+{
+    return wallet->GetStakingBalance();
+}
+
 bool WalletModel::haveWatchOnly() const
 {
     return fHaveWatchOnly;
@@ -105,6 +111,11 @@ CAmount WalletModel::getWatchUnconfirmedBalance() const
 CAmount WalletModel::getWatchImmatureBalance() const
 {
     return wallet->GetImmatureWatchOnlyBalance();
+}
+
+CAmount WalletModel::getWatchStakingBalance() const
+{
+    return wallet->GetStakingWatchOnlyBalance();
 }
 
 void WalletModel::updateStatus()
@@ -149,29 +160,42 @@ void WalletModel::checkBalanceChanged()
     CAmount newBalance = getBalance();
     CAmount newUnconfirmedBalance = getUnconfirmedBalance();
     CAmount newImmatureBalance = getImmatureBalance();
+    CAmount newStakingBalance = getStakingBalance();
     CAmount newAnonymizedBalance = getAnonymizedBalance();
     CAmount newWatchOnlyBalance = 0;
     CAmount newWatchUnconfBalance = 0;
     CAmount newWatchImmatureBalance = 0;
+    CAmount newWatchStakingBalance= 0;
     if (haveWatchOnly()) {
         newWatchOnlyBalance = getWatchBalance();
         newWatchUnconfBalance = getWatchUnconfirmedBalance();
         newWatchImmatureBalance = getWatchImmatureBalance();
+        newWatchStakingBalance = getWatchStakingBalance();
     }
 
-    if (cachedBalance != newBalance || cachedUnconfirmedBalance != newUnconfirmedBalance || cachedImmatureBalance != newImmatureBalance ||
-        cachedAnonymizedBalance != newAnonymizedBalance || cachedTxLocks != nCompleteTXLocks ||
-        cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance) {
+    if (cachedBalance != newBalance ||
+    	cachedUnconfirmedBalance != newUnconfirmedBalance ||
+		cachedImmatureBalance != newImmatureBalance ||
+		cachedStakingBalance != newStakingBalance ||
+        cachedAnonymizedBalance != newAnonymizedBalance ||
+		cachedTxLocks != nCompleteTXLocks ||
+        cachedWatchOnlyBalance != newWatchOnlyBalance ||
+		cachedWatchUnconfBalance != newWatchUnconfBalance ||
+		cachedWatchImmatureBalance != newWatchImmatureBalance ||
+		cachedWatchStakingBalance != newWatchStakingBalance) {
+
         cachedBalance = newBalance;
         cachedUnconfirmedBalance = newUnconfirmedBalance;
         cachedImmatureBalance = newImmatureBalance;
+        cachedStakingBalance = newStakingBalance;
         cachedAnonymizedBalance = newAnonymizedBalance;
         cachedTxLocks = nCompleteTXLocks;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
+        cachedWatchStakingBalance = newWatchStakingBalance;
         emit balanceChanged(newBalance, newUnconfirmedBalance, newImmatureBalance, newAnonymizedBalance,
-            newWatchOnlyBalance, newWatchUnconfBalance, newWatchImmatureBalance);
+            newWatchOnlyBalance, newWatchUnconfBalance, newWatchImmatureBalance, newStakingBalance, newWatchStakingBalance);
     }
 }
 

@@ -1377,6 +1377,18 @@ CAmount CWallet::GetImmatureBalance() const
     }
     return nTotal;
 }
+CAmount CWallet::GetStakingBalance() const
+{
+    CAmount nTotal = 0;
+    {
+        LOCK2(cs_main, cs_wallet);
+        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
+            const CWalletTx* pcoin = &(*it).second;
+            nTotal += pcoin->GetStakingCredit();
+        }
+    }
+    return nTotal;
+}
 
 CAmount CWallet::GetWatchOnlyBalance() const
 {
@@ -1419,6 +1431,20 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
     }
     return nTotal;
 }
+
+CAmount CWallet::GetStakingWatchOnlyBalance() const
+{
+    CAmount nTotal = 0;
+    {
+        LOCK2(cs_main, cs_wallet);
+        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
+            const CWalletTx* pcoin = &(*it).second;
+            nTotal += pcoin->GetStakingWatchOnlyCredit();
+        }
+    }
+    return nTotal;
+}
+
 
 /**
  * populate vCoins with vector of available COutputs.

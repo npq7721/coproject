@@ -386,6 +386,7 @@ public:
     CAmount GetBalance() const;
     CAmount GetUnconfirmedBalance() const;
     CAmount GetImmatureBalance() const;
+    CAmount GetStakingBalance() const;
     CAmount GetAnonymizableBalance() const;
     CAmount GetAnonymizedBalance() const;
     double GetAverageAnonymizedRounds() const;
@@ -394,6 +395,7 @@ public:
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
+    CAmount GetStakingWatchOnlyBalance() const;
     bool CreateTransaction(const std::vector<std::pair<CScript, CAmount> >& vecSend,
         CWalletTx& wtxNew,
         CReserveKey& reservekey,
@@ -713,6 +715,7 @@ public:
     mutable bool fDebitCached;
     mutable bool fCreditCached;
     mutable bool fImmatureCreditCached;
+    mutable bool fStakingCreditCached;
     mutable bool fAvailableCreditCached;
     mutable bool fAnonymizableCreditCached;
     mutable bool fAnonymizedCreditCached;
@@ -721,11 +724,13 @@ public:
     mutable bool fWatchDebitCached;
     mutable bool fWatchCreditCached;
     mutable bool fImmatureWatchCreditCached;
+    mutable bool fStakingWatchCreditCached;
     mutable bool fAvailableWatchCreditCached;
     mutable bool fChangeCached;
     mutable CAmount nDebitCached;
     mutable CAmount nCreditCached;
     mutable CAmount nImmatureCreditCached;
+    mutable CAmount nStakingCreditCached;
     mutable CAmount nAvailableCreditCached;
     mutable CAmount nAnonymizableCreditCached;
     mutable CAmount nAnonymizedCreditCached;
@@ -734,6 +739,7 @@ public:
     mutable CAmount nWatchDebitCached;
     mutable CAmount nWatchCreditCached;
     mutable CAmount nImmatureWatchCreditCached;
+    mutable CAmount nStakingWatchCreditCached;
     mutable CAmount nAvailableWatchCreditCached;
     mutable CAmount nChangeCached;
 
@@ -770,6 +776,7 @@ public:
         fDebitCached = false;
         fCreditCached = false;
         fImmatureCreditCached = false;
+        fStakingCreditCached = false;
         fAvailableCreditCached = false;
         fAnonymizableCreditCached = false;
         fAnonymizedCreditCached = false;
@@ -778,11 +785,13 @@ public:
         fWatchDebitCached = false;
         fWatchCreditCached = false;
         fImmatureWatchCreditCached = false;
+        fStakingWatchCreditCached = false;
         fAvailableWatchCreditCached = false;
         fChangeCached = false;
         nDebitCached = 0;
         nCreditCached = 0;
         nImmatureCreditCached = 0;
+        nStakingCreditCached = 0;
         nAvailableCreditCached = 0;
         nAnonymizableCreditCached = 0;
         nAnonymizedCreditCached = 0;
@@ -792,6 +801,7 @@ public:
         nWatchCreditCached = 0;
         nAvailableWatchCreditCached = 0;
         nImmatureWatchCreditCached = 0;
+        nStakingWatchCreditCached = 0;
         nChangeCached = 0;
         nOrderPos = -1;
     }
@@ -852,6 +862,7 @@ public:
         fWatchCreditCached = false;
         fAvailableWatchCreditCached = false;
         fImmatureWatchCreditCached = false;
+        fStakingWatchCreditCached = false;
         fDebitCached = false;
         fChangeCached = false;
     }
@@ -921,7 +932,7 @@ public:
 
     CAmount GetImmatureCredit(bool fUseCache = true) const
     {
-        if ((IsCoinBase() || IsCoinStake()) && GetBlocksToMaturity() > 0 && IsInMainChain()) {
+        if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain()) {
             if (fUseCache && fImmatureCreditCached)
                 return nImmatureCreditCached;
             nImmatureCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE);
@@ -930,6 +941,18 @@ public:
         }
 
         return 0;
+    }
+
+    CAmount GetStakingCredit(bool fUseCache = true) const {
+    	if (IsCoinStake() && GetBlocksToMaturity() > 0 && IsInMainChain()) {
+			if (fUseCache && fStakingCreditCached)
+				return nStakingCreditCached;
+			nStakingCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE);
+			fStakingCreditCached = true;
+			return nStakingCreditCached;
+		}
+
+		return 0;
     }
 
     CAmount GetAvailableCredit(bool fUseCache = true) const
@@ -1083,6 +1106,18 @@ public:
 
         return 0;
     }
+    CAmount GetStakingWatchOnlyCredit(const bool& fUseCache = true) const
+	{
+		if (IsCoinStake() && GetBlocksToMaturity() > 0 && IsInMainChain()) {
+			if (fUseCache && fStakingWatchCreditCached)
+				return nStakingWatchCreditCached;
+			nStakingWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
+			fStakingWatchCreditCached = true;
+			return nStakingWatchCreditCached;
+		}
+
+		return 0;
+	}
 
     CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache = true) const
     {
